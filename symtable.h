@@ -120,6 +120,11 @@ void  SymTable_map(SymTable_T oSymTable,
         void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra),
         const void *pvExtra);
 
+
+/* Prints basic information about the hashtable:
+1) Max bindings in a bucket.
+2) Min binding in a bucket.
+3) Weighted average bucket size */
 void SymTable_stats(SymTable_T oSymTable);
 
 #endif
