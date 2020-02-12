@@ -15,16 +15,16 @@ The following functions are provided:
 
 ## Implementation
 
-The tables are internally stored as [Hash arrays](https://en.wikipedia.org/wiki/Hash_table) with
-[linked lists](https://en.wikipedia.org/wiki/Linked_list) for resolving conflicts. Operations
-like 'get', 'put', 'remove', 'contains' should run in O(1) time.
+The tables are stored internally as Hash tables with
+Linked lists for resolving conflicts. Operations
+like 'get', 'put', 'remove', 'contains' run in O(1) time.
 
-For a less efficient implementation using only linked lists, see
-[symtable-lists](https://bitbucket.org/txatzial/symbol-table-lists).
+For a less efficient implementation using only Linked lists, see
+[symbol-table-lists](https://bitbucket.org/tasxatzial/symbol-table-lists).
 
 ## Compile
 
-The program is written in C. To compile, use the provided Makefile.
+Use the provided Makefile:
 
 ### Building the library
 
