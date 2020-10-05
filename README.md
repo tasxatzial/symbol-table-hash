@@ -19,8 +19,7 @@ The tables are stored internally as Hash tables with
 Linked lists for resolving conflicts. Operations
 like 'get', 'put', 'remove', 'contains' run in O(1) time.
 
-For a less efficient implementation using only Linked lists, see
-[symbol-table-lists](https://bitbucket.org/tasxatzial/symbol-table-lists).
+For a less efficient implementation using only Linked lists, see [symbol-table-lists](https://github.com/tasxatzial/symbol-table-lists).
 
 ## Compile
 
