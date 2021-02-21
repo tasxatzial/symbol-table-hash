@@ -1,6 +1,6 @@
-# Description
+# Symbol tables library
 
-Library for creating and using [Symbol tables](https://en.wikipedia.org/wiki/Symbol_table).
+Library for creating and using [Symbol tables](https://en.wikipedia.org/wiki/Symbol_table) (hash tables based implementation).
 
 The following functions are provided:
 
@@ -31,15 +31,15 @@ Use the provided Makefile:
 make symtablehash.o
 ```
 
-### Building the test files
+### Building the demo
 
-Using the library is demonstrated in [testsymtab.c](testsymtab.c). Build the tests with:
+Using the library is demonstrated in [testsymtab.c](testsymtab.c).
+
+Build:
 
 ```bash
 make hash
 ```
-
-Running the tests is explained in the next section.
 
 ## Typical usage
 
