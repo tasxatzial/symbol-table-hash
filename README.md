@@ -33,7 +33,7 @@ make symtablehash.o
 
 ### Building the demo
 
-Using the library is demonstrated in [testsymtab.c](testsymtab.c).
+Using the library is demonstrated in [testsymtab.c](src/testsymtab.c).
 
 Build:
 
@@ -43,7 +43,7 @@ make hash
 
 ## Typical usage
 
-The predefined tests in [testsymtab.c](testsymtab.c) create tables and insert random (keys, values). The following are always true:
+The predefined tests in [testsymtab.c](src/testsymtab.c) create tables and insert random (keys, values). The following are always true:
 
 1. Values are always integers > 0.
 2. Changing a value simply means adding 2 to it.
