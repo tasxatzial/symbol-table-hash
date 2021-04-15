@@ -84,10 +84,8 @@ uiBuckets: the new number of buckets
 
 Returns: void */
 static void SymTable_change(SymTable_T oSymTable, unsigned int uiBuckets) {
-    struct abind **bind_arr;
-    struct abind *ptr, *ptr_next, *new_bind;
+    struct abind **bind_arr, *ptr, *ptr_next;
     struct SymTable *symtable;
-    char *new_key;
     unsigned int ui, uiHash;
 
     symtable = oSymTable;
@@ -102,48 +100,25 @@ static void SymTable_change(SymTable_T oSymTable, unsigned int uiBuckets) {
 
     for (ui = 0U; ui < (symtable->uiBuckets); ui++) {
         ptr = symtable->array[ui]; /* first binding of the bucket */
-        while (ptr) {   /* process only valid bindings */
+        while (ptr) {              /* process only valid bindings */
 
-            /* allocate memory for a new binding + key */
-            new_bind = malloc(sizeof(struct abind));
-            assert(new_bind);
-            new_key = malloc((strlen(ptr->key) + 1) * sizeof(char));
-            assert(new_key);
-
-            /* copy pcKey into new_key */
-            strcpy(new_key, ptr->key);
-
-            /* initialize binding */
-            new_bind->key = new_key;        
-            new_bind->value = ptr->value;
-
-            /* binding is inserted in the bucket indicated by the hash of its
-            key and before every other binding */
-            uiHash = SymTable_hash(uiBuckets, new_bind->key);
-            new_bind->next = bind_arr[uiHash];
-            bind_arr[uiHash] = new_bind;
-
-            ptr = ptr->next;
-        }
-    }
-
-    /* free any unused memory: old bindings, old keys, old array of
-    pointers to bindings */
-    for (ui = 0U; ui < (symtable->uiBuckets); ui++) {
-        ptr = symtable->array[ui];
-        while (ptr) {   /* free only valid bindings */
+            /* binding is inserted first in the bucket indicated by the hash of its key */
+            uiHash = SymTable_hash(uiBuckets, ptr->key);
             ptr_next = ptr->next;
-            free(ptr->key);
-            free(ptr);
+            ptr->next = bind_arr[uiHash];
+            bind_arr[uiHash] = ptr;
             ptr = ptr_next;
         }
     }
+
+    /* old binding array is not needed anymore */
     free(symtable->array);
 
     /* assign the number of buckets and the array of pointers to bindings
     to their new values. */
     symtable->uiBuckets = uiBuckets;
     symtable->array = bind_arr;
+
     return;
 }
 
