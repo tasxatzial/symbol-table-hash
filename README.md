@@ -1,39 +1,42 @@
 # Symbol tables library
 
-Library for creating and using [Symbol tables](https://en.wikipedia.org/wiki/Symbol_table) (hash tables based implementation).
+Library for creating and using [Symbol tables](https://en.wikipedia.org/wiki/Symbol_table) (hash table based implementation).
 
 The following functions are provided:
 
 * SymTable_new(): Create a new table.
-* Symtable_free(table): Delete table and free memory.
-* SymTable_getLength(table): Get the total number of (keys, values) in the table.
+* Symtable_free(table): Delete table. No other functions should be used after this one.
+* SymTable_getLength(table): Get the total number of keys.
 * SymTable_put(table, key, value): Put (key, value) in the table.
-* SymTable_remove(table, key): Delete key from table and free memory.
+* SymTable_remove(table, key): Delete key from table.
 * SymTable_contains(table, key): Check whether table has key.
 * SymTable_get(table, key): Get the value associated with key.
-* SymTable_map(table, function, new_value): Apply function to each (key, value) in the table.
+* SymTable_map(table, function(key, new_value, extra_value), new_value): Apply a function to each value.
+* SymTable_stats(table): Print basic information about the table.
 
 ## Implementation
 
-The tables are stored internally as Hash tables with
-Linked lists for resolving conflicts. Operations
-like 'get', 'put', 'remove', 'contains' run in O(1) time.
+The library provides an [opaque data type](https://en.wikipedia.org/wiki/Opaque_data_type) for the table that can be used with the above functions. The representation of the type is completely hidden from its users. C-strings are supported as keys but values can be of any type, therefore the table is used to store only pointers to values.
+
+The tables are internally stored as arrays. Each element of the array is a linked list, this helps resolve conflicts arising from different keys having the same hash value. Operations like 'get', 'put', 'remove', 'contains' run in O(1) time.
 
 For a less efficient implementation using only Linked lists, see [symbol-table-lists](https://github.com/tasxatzial/symbol-table-lists).
 
+## Profiling
+
+The program has been tested for memory leaks with [valgrind](https://valgrind.org/) and [AddressSanitizer](https://github.com/google/sanitizers/wiki/AddressSanitizer).
+
 ## Compile
 
-Use the provided Makefile:
-
-### Building the library
+Build the library:
 
 ```bash
 make symtablehash.o
 ```
 
-### Building the demo
+## Demo
 
-Using the library is demonstrated in [testsymtab.c](src/testsymtab.c).
+Using the library is demonstrated in [runsymtab.c](src/runsymtab.c).
 
 Build:
 
@@ -41,16 +44,12 @@ Build:
 make hash
 ```
 
-## Typical usage
-
-The predefined tests in [testsymtab.c](src/testsymtab.c) create tables and insert random (keys, values). The following are always true:
+The predefined demo creates tables and inserts random (key, value) pairs. More specifically:
 
 1. Values are always integers > 0.
 2. Changing a value simply means adding 2 to it.
 
-By default all operations
-are performed on one table. This can be alterned by changing the NTABLES constant.
-There is also the option to show all intermediate results, to do so, change the DEBUG constant.
+By default all operations are performed on one table. This can be alterned by changing the NTABLES constant. There is also the option to show all intermediate results by changing the DEBUG constant to 1.
 
 ### Example
 
