@@ -1,10 +1,10 @@
 CFLAGS = -c -Wall -ansi -pedantic
 
-hash: testsymtab.o symtablehash.o
-	gcc testsymtab.o symtablehash.o -o hash
+hash: runsymtab.o symtablehash.o
+	gcc runsymtab.o symtablehash.o -o hash
 
-testsymtab.o: testsymtab.c symtable.h
-	gcc $(CFLAGS) testsymtab.c
+runsymtab.o: runsymtab.c symtable.h
+	gcc $(CFLAGS) runsymtab.c
 
 symtablehash.o: symtablehash.c symtable.h
 	gcc $(CFLAGS) symtablehash.c
