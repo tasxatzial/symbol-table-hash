@@ -1,7 +1,6 @@
 /* Library for creating and using Symbol tables.
 
-Hash array based implementation with linked lists for
-resolving conflicts */
+Hash array based implementation with linked lists for resolving conflicts */
 
 #include <stdio.h>
 #include <string.h>
@@ -43,17 +42,13 @@ struct SymTable {
 };
 
 
-/* SymTable_hash
+/* Computes the hash code for pcKey, an unsigned int in [0 : uiBuckets-1]
 
-Computes the hash code for pcKey.
-
-Checks: if pcKey is NULL at runtime.
+Asserts: if pcKey is NULL at runtime.
 
 Parameters:
-uiBuckets: number of buckets
-pcKey: character array (key). Must be null terminated.
-
-Returns: The hash code for pcKey, range [0 : uiBuckets-1] */
+* uiBuckets: number of buckets
+* pcKey: character array (key). Must be null terminated. */
 static unsigned int SymTable_hash(unsigned int uiBuckets, const char *pcKey) {
     size_t ui;
     unsigned int uiHash;
@@ -68,21 +63,17 @@ static unsigned int SymTable_hash(unsigned int uiBuckets, const char *pcKey) {
 }
 
 
-/* SymTable_change
-
-Changes the number of buckets in oSymTable to uiBuckets.
+/* Changes the number of buckets in oSymTable to uiBuckets.
 
 uiBuckets MUST be a number in BUCKARR.
 
-Checks:
+Asserts:
 1) if oSymTable is NULL at runtime.
 2) if necessary memory is allocated succesfully at runtime.
 
 Parameters:
-oSymTable: a SymTable_T type
-uiBuckets: the new number of buckets
-
-Returns: void */
+* oSymTable: a SymTable_T type
+* uiBuckets: the new number of buckets */
 static void SymTable_change(SymTable_T oSymTable, unsigned int uiBuckets) {
     struct abind **bind_arr, *ptr, *ptr_next;
     struct SymTable *symtable;
@@ -123,15 +114,9 @@ static void SymTable_change(SymTable_T oSymTable, unsigned int uiBuckets) {
 }
 
 
-/* SymTable_new
+/* Creates a SymTable struct with no bindings and MIN_BUCKETS number of buckets. 
 
-Creates a SymTable struct with no bindings and MIN_BUCKETS number of buckets. 
-
-Checks: if memory was allocated succesfully for oSymTable at runtime.
-
-Parameters: void
-
-Returns: a SymTable_T type */
+Asserts: if memory was allocated succesfully for oSymTable at runtime. */
 SymTable_T SymTable_new(void) {
     struct SymTable *symtable;
     unsigned int ui;
@@ -149,14 +134,10 @@ SymTable_T SymTable_new(void) {
 }
 
 
-/* SymTable_free
-
-Frees all memory used by oSymTable.
+/* Frees all memory used by oSymTable.
 
 Parameters:
-oSymTable: a SymTable_T type
-
-Returns: void */
+* oSymTable: a SymTable_T type */
 void SymTable_free(SymTable_T oSymTable) {
     struct abind *ptr, *ptr_next;
     struct SymTable *symtable;
@@ -181,14 +162,12 @@ void SymTable_free(SymTable_T oSymTable) {
 }
 
 
-/* SymTable_getLength
+/* Returns the number of bindings in oSymTable.
 
-Returns the number of bindings in oSymTable.
-
-Checks: if oSymTable is not NULL at runtime.
+Asserts: if oSymTable is not NULL at runtime.
 
 Parameters:
-oSymTable: a SymTable_T type */
+* oSymTable: a SymTable_T type */
 unsigned int SymTable_getLength(SymTable_T oSymTable) {
     struct SymTable *symtable;
 
@@ -199,15 +178,13 @@ unsigned int SymTable_getLength(SymTable_T oSymTable) {
 }
 
 
-/* SymTable_contains
+/* Checks whether a binding with key equal to pcKey is present in oSymTable.
 
-Checks whether a binding with key equal to pcKey is present in oSymTable.
-
-Checks: if oSymTable and pcKey are not NULL at runtime.
+Asserts: if oSymTable and pcKey are not NULL at runtime.
 
 Parameters: 
-oSymTable: a SymTable_T type.
-pcKey: character array (key). Must be null terminated.
+* oSymTable: a SymTable_T type.
+* pcKey: character array (key). Must be null terminated.
 
 Returns: 1 if pcKey is found, 0 otherwise */
 int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
@@ -233,23 +210,19 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
 }
 
 
-/* SymTable_put
+/* Creates a new binding for oSymTable from a given pcKey and pvValue.
 
-Creates a new binding for oSymTable from a given pcKey and pvValue.
-
-Checks: 
+Asserts: 
 1) if oSymTable and pcKey are not NULL at runtime.
 2) if necessary memory was allocated succesfully at runtime.
 
 Parameters:
-oSymTable: a SymTable_T type
-pcKey: a character array (key). Must be null terminated.
-pvValue: pointer to any value
+* oSymTable: a SymTable_T type
+* pcKey: a character array (key). Must be null terminated.
+* pvValue: pointer to any value
 
 Returns: 1 if binding was created succesfully, 0 if there is already
-a binding with key equal to pcKey.
-
-NOTE: A binding owns its key. A binding does not own its value. */
+a binding with key equal to pcKey. */
 int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue) {
     struct abind *new_bind;
     struct SymTable *symtable;
@@ -299,18 +272,14 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue) {
 }
 
 
-/* SymTable_map
+/* Applies function pfApply to every binding in oSymTable.
 
-Applies function pfApply to every binding in oSymTable.
-
-Checks: if oSymTable and pfApply are not NULL at runtime
+Asserts: if oSymTable and pfApply are not NULL at runtime.
 
 Parameters:
-oSymTable: a SymTable_T type
-pfApply: function to apply
-pvExtra: a pointer to any value. Used by pfApply.
-
-Returns: void */
+* oSymTable: a SymTable_T type
+* pfApply: function to apply
+* pvExtra: a pointer to any value. Used by pfApply. */
 void SymTable_map(SymTable_T oSymTable, void (*pfApply)(const char *pcKey, void *pvValue, void *pvExtra), const void *pvExtra) {
     struct abind *ptr;
     struct SymTable *symtable;
@@ -330,15 +299,13 @@ void SymTable_map(SymTable_T oSymTable, void (*pfApply)(const char *pcKey, void 
 }
 
 
-/* SymTable_get
+/* Finds in oSymTable a binding with key equal to pcKey.
 
-Finds in oSymTable a binding with key equal to pcKey.
-
-Checks: if oSymTable and pcKey are not NULL at runtime.
+Asserts: if oSymTable and pcKey are not NULL at runtime.
 
 Parameters:
-oSymTable: a SymTable_T type
-pcKey: a character array (key). Must be null terminated.
+* oSymTable: a SymTable_T type
+* pcKey: a character array (key). Must be null terminated.
 
 Returns: a pointer to the value or NULL if such binding was not found. */
 void* SymTable_get(SymTable_T oSymTable, const char *pcKey) {
@@ -364,15 +331,13 @@ void* SymTable_get(SymTable_T oSymTable, const char *pcKey) {
 }
 
 
-/* SymTable_remove
+/* Removes a binding with key equal to pcKey.
 
-Removes a binding with key equal to pcKey.
-
-Checks: if oSymTable and pcKey are not NULL at runtime.
+Asserts: if oSymTable and pcKey are not NULL at runtime.
 
 Parameters:
-oSymTable: a SymTable_T type
-pcKey: a character array (key). Must be null terminated.
+* oSymTable: a SymTable_T type
+* pcKey: a character array (key). Must be null terminated.
 
 Returns: 1 if removal was successful, 0 if such binding was not found */
 int SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
