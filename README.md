@@ -7,7 +7,7 @@ The following functions are provided:
 * SymTable_new(): Create a new table.
 * Symtable_free(table): Delete table. No other functions should be used after this one.
 * SymTable_getLength(table): Get the total number of keys.
-* SymTable_put(table, key, value): Put (key, value) in the table.
+* SymTable_put(table, key, value): Put (key, value) in the table only if key does not exist.
 * SymTable_remove(table, key): Delete key from table.
 * SymTable_contains(table, key): Check whether table has key.
 * SymTable_get(table, key): Get the value associated with key.
@@ -45,27 +45,22 @@ make hash
 The predefined demo creates tables and inserts random (key, value) pairs. More specifically:
 
 1. Values are always integers > 0.
-2. Changing a value simply means adding 2 to it.
+2. Changing a value means adding 2 to it.
 
 By default all operations are performed on one table. This can be alterned by changing the NTABLES constant. There is also the option to show all intermediate results by changing the DEBUG constant to 1.
 
 ### Example
 
-To create a table and perform the following operations 2 times:
-
-1) Insert 10 random (keys, values) with keys having 5 characters max from the alphabet 'abcde'.
-
-2) Change the values of all keys.
-
-3) Search for 10 random keys.
-
-4) Delete 10 random keys.
-
-Run:
-
 ```bash
 ./hash 10 5 abcde 2
 ```
+
+will perform the following sequence of operations 2 times:
+
+1. Insert 10 random (keys, values) with keys having 5 characters max from the alphabet 'abcde'.
+2. Change the values of all keys.
+3. Search for 10 random keys.
+4. Delete 10 random keys.
 
 ## Profiling
 
