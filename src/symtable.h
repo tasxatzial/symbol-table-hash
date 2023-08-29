@@ -39,11 +39,8 @@ Asserts:
 Parameters:
 * oSymTable: a SymTable_T type
 * pcKey: a character array (key). Must be null terminated.
-* pvValue: pointer to any value
-
-Returns: 1 if binding was created succesfully, 0 if there is already
-a binding with key equal to pcKey. */
-int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue);
+* pvValue: pointer to any value */
+void SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue);
 
 
 /* Removes a binding with key equal to pcKey.

@@ -119,21 +119,21 @@ void random_actions(SymTable_T oSymTable, char **keys, int num_keys, int *values
     int j, *bind_value;
     char *key;
     int pvValue = 2;    /* used to change the value of each binding */
+    int removes_key, contains_key;
 
     /* perform some actions on the table */
     printf("++> Inserting %d random keys...\n", num_keys);
     for (j = 0; j < num_keys; j++) {
         key = keys[rand() % num_keys];
-        if (SymTable_put(oSymTable, key, &values[j])) {
-            #if DEBUG
-                printf("(%s : %d) inserted\n", key, values[j]);
-            #endif
-        }
-        else {
-            #if DEBUG
-                printf("\'%s\' already exists\n", key);
-            #endif
-        }
+        contains_key = SymTable_contains(oSymTable, key);
+        #if DEBUG
+            if (contains_key) {
+                printf("(%s : %d) replace\n", key, values[j]);
+            }
+            else {
+                printf("(%s : %d) insert\n", key, values[j]);
+            }
+        #endif
     }
     printf("DONE\n");
     printf("++> Keys inserted: %d\n", SymTable_getLength(oSymTable));
@@ -158,32 +158,29 @@ void random_actions(SymTable_T oSymTable, char **keys, int num_keys, int *values
     for (j = 0; j < num_keys; j++) {
         key = keys[rand() % num_keys];
         bind_value = SymTable_get(oSymTable, key);
-        if (bind_value) {
-            #if DEBUG
+        #if DEBUG
+            if (bind_value) {
                 print_bind(key, bind_value, NULL);
-            #endif
-        }
-        else {
-            #if DEBUG
+            }
+            else {
                 printf("\'%s\' not found\n", key);
-            #endif
-        }
+            }
+        #endif
     }
     printf("DONE\n");
 
     printf("++> Deleting %d random keys...\n", num_keys);
     for (j = 0; j < num_keys; j++) {
         key = keys[rand() % num_keys];
-        if (SymTable_remove(oSymTable, key)) {
-            #if DEBUG
+        removes_key = SymTable_remove(oSymTable, key);
+        #if DEBUG
+            if (removes_key) {
                 printf("\'%s\' deleted\n", key);
-            #endif
-        }
-        else {
-            #if DEBUG
-                printf("\'%s\' NOT found\n", key);
-            #endif
-        }
+            }
+            else {
+                printf("\'%s\' NOT found\n", key); 
+            }
+        #endif
     }
     printf("DONE\n");
     

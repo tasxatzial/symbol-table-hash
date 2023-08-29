@@ -91,7 +91,7 @@ static void SymTable_change(SymTable_T oSymTable, unsigned int uiBuckets) {
 
     for (ui = 0U; ui < (symtable->uiBuckets); ui++) {
         ptr = symtable->array[ui]; /* first binding of the bucket */
-        while (ptr) {              /* process only valid bindings */
+        while (ptr) {
 
             /* binding is inserted first in the bucket indicated by the hash of its key */
             uiHash = SymTable_hash(uiBuckets, ptr->key);
@@ -149,7 +149,7 @@ void SymTable_free(SymTable_T oSymTable) {
     }
     for (ui = 0U; ui < (symtable->uiBuckets); ui++) {
         ptr = symtable->array[ui]; /* first binding of the bucket */
-        while (ptr) {    /* free only valid bindings */
+        while (ptr) {
             ptr_next = ptr->next;
             free(ptr->key); 
             free(ptr);
@@ -200,7 +200,7 @@ int SymTable_contains(SymTable_T oSymTable, const char *pcKey) {
     uiHash = SymTable_hash(symtable->uiBuckets, pcKey);
     ptr = symtable->array[uiHash]; /* first binding of the bucket */
     
-    while (ptr) {   /* search only valid bindings */
+    while (ptr) {
         if (!strcmp(ptr->key, pcKey)) {
             return 1;
         }
@@ -219,12 +219,9 @@ Asserts:
 Parameters:
 * oSymTable: a SymTable_T type
 * pcKey: a character array (key). Must be null terminated.
-* pvValue: pointer to any value
-
-Returns: 1 if binding was created succesfully, 0 if there is already
-a binding with key equal to pcKey. */
-int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue) {
-    struct abind *new_bind;
+* pvValue: pointer to any value */
+void SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue) {
+    struct abind *new_bind, *ptr;
     struct SymTable *symtable;
     char *new_key;
     unsigned int uiHash, uiBuckets;
@@ -234,9 +231,16 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue) {
     assert(symtable);
     assert(pcKey);
 
-    /* do nothing if pcKey already exists in the table */
-    if (SymTable_contains(symtable, pcKey)) {
-        return 0;
+    /* search only the bucket that corresponds to the pcKey hash code */
+    uiHash = SymTable_hash(symtable->uiBuckets, pcKey);
+    ptr = symtable->array[uiHash]; /* first binding of the bucket */
+
+    while (ptr) {
+        if (!strcmp(ptr->key, pcKey)) {
+            ptr->value = (void *) pvValue;
+            return;
+        }
+        ptr = ptr->next;
     }
 
     /* find if #buckets need to increase, if so, call Symtable_change */
@@ -248,17 +252,15 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue) {
         SymTable_change(symtable, uiBuckets);
     }
 
-    /* pcKey not found -> allocate memory for a new binding */
+    /* allocate memory for a new binding */
     new_bind = malloc(sizeof(struct abind));
     assert(new_bind);
     new_key = malloc((strlen(pcKey) + 1) * sizeof(char));
     assert(new_key);
 
-    /* copy pcKey into new_key */
-    strcpy(new_key, pcKey);
-
     /* initialize binding */
-    new_bind->key = new_key;        
+    strcpy(new_key, pcKey);
+    new_bind->key = new_key;
     new_bind->value = (void *) pvValue;
 
     /* binding is inserted in the bucket indicated by the hash of its key 
@@ -268,7 +270,6 @@ int SymTable_put(SymTable_T oSymTable, const char *pcKey, const void *pvValue) {
     symtable->array[uiHash] = new_bind;
 
     symtable->uiBindings += 1;
-    return 1;
 }
 
 
@@ -291,7 +292,7 @@ void SymTable_map(SymTable_T oSymTable, void (*pfApply)(const char *pcKey, void 
     
     for (ui = 0U; ui < (symtable->uiBuckets); ui++) {
         ptr = symtable->array[ui]; /* first binding of the bucket */
-        while (ptr) {   /* apply only to valid bindings */
+        while (ptr) {
             pfApply(ptr->key, ptr->value, (void *) pvExtra);
             ptr = ptr->next;
         }
@@ -321,7 +322,7 @@ void* SymTable_get(SymTable_T oSymTable, const char *pcKey) {
     uiHash = SymTable_hash(symtable->uiBuckets, pcKey);
     ptr = symtable->array[uiHash]; /* first binding of the bucket */
 
-    while (ptr) {   /* search only valid bindings */
+    while (ptr) {
         if (!strcmp(ptr->key, pcKey)) {
             return ptr->value;
         }
@@ -353,7 +354,7 @@ int SymTable_remove(SymTable_T oSymTable, const char *pcKey) {
     uiHash = SymTable_hash(symtable->uiBuckets, pcKey);
     ptr = symtable->array[uiHash]; /* first binding of the bucket */
 
-    while (ptr) {   /* search only valid bindings */
+    while (ptr) {
         /* compare pcKey with the key of each binding */
         if (strcmp(ptr->key, pcKey)) {  
             ptr_prev = ptr;

@@ -7,7 +7,7 @@ The following functions are provided:
 * SymTable_new(): Create a new table.
 * Symtable_free(table): Delete table. No other functions should be used after this one.
 * SymTable_getLength(table): Get the total number of keys.
-* SymTable_put(table, key, value): Put (key, value) in the table only if key does not exist.
+* SymTable_put(table, key, value): Put (key, value) in the table. If key exists, update its value.
 * SymTable_remove(table, key): Delete key from table.
 * SymTable_contains(table, key): Check whether table has key.
 * SymTable_get(table, key): Get the value associated with key.
